@@ -9,8 +9,8 @@
 int alignBunnyWithProcrustes() {
 	// Load the source and target mesh.
 	// Make sure the paths are correct.
-	const std::string filenameSource = std::string("../data/bunny/bunny.off");
-	const std::string filenameTarget = std::string("../data/bunny/bunny_trans.off");
+	const std::string filenameSource = std::string("../../data/bunny/bunny.off");
+	const std::string filenameTarget = std::string("../../data/bunny/bunny_trans.off");
 
 	SimpleMesh sourceMesh;
 	if (!sourceMesh.loadMesh(filenameSource)) {
@@ -49,7 +49,7 @@ int alignBunnyWithProcrustes() {
 	for (const auto& targetPoint : targetPoints) {
 		resultingMesh = SimpleMesh::joinMeshes(SimpleMesh::sphere(targetPoint, 0.002f), resultingMesh, Matrix4f::Identity());
 	}
-	resultingMesh.writeMesh(std::string("../results/bunny_procrustes.off"));
+	resultingMesh.writeMesh(std::string("../../results/bunny_procrustes.off"));
 	std::cout << "Resulting mesh written." << std::endl;
 	
 	return 0;
