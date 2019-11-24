@@ -5,12 +5,12 @@ set(CMAKE_CONFIGURATION_TYPES Debug Release CACHE TYPE INTERNAL FORCE)
 project(exercise_04)
 
 # Options
-set(LIBRARY_DIR ${CMAKE_CURRENT_SOURCE_DIR}/../libs CACHE PATH "Path to lib folder")
+set(LIBRARY_DIR ${CMAKE_CURRENT_SOURCE_DIR}/../../../../libs CACHE PATH "Path to lib folder")
 set(Eigen3_INCLUDE_DIR ${LIBRARY_DIR}/Eigen/ CACHE PATH "Path to Eigen source folder")
 # set(Ceres_INCLUDE_DIR ${LIBRARY_DIR}/ceres-solver/include CACHE PATH "Path to ceres source folder")
 # set(glog_DIR_HINT ${LIBRARY_DIR}/glog-lib/ CACHE PATH "Path to glog source folder")
 set(glog_INCLUDE_DIR ${LIBRARY_DIR}/glog-lib/include CACHE PATH "Path to glog source folder")
-set(Ceres_DIR ${LIBRARY_DIR}/Ceres/CMake CACHE PATH "Path to Ceres build folder")
+# set(Ceres_DIR ${LIBRARY_DIR}/Ceres/CMake CACHE PATH "Path to Ceres build folder")
 set(Ceres_INCLUDE_DIR ${Ceres_DIR}/../include)
 
 set(CMAKE_PREFIX_PATH ${CMAKE_PREFIX_PATH} ${Ceres_DIR})
@@ -22,6 +22,8 @@ set(CMAKE_CXX_STANDARD 14)
 
 find_package(Ceres REQUIRED)
 find_package(glog REQUIRED ${glog_DIR_HINT})
+find_package(Eigen3 REQUIRED)
+include_directories(${EIGEN3_INCLUDE_DIR})
 
 add_definitions("-D_DISABLE_EXTENDED_ALIGNED_STORAGE")
 

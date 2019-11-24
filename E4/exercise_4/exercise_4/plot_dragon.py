@@ -64,7 +64,7 @@ def main(args):
 
 if __name__ == "__main__":
     parser = argparse.ArgumentParser()
-    parser.add_argument("--data_path", type=str, default="data/", help="Directory of the data files.")
+    parser.add_argument("--data_path", type=str, default="../data", help="Directory of the data files.")
     parser.add_argument("--deg", type=float, default=0.0, help="Rotation value in degree from Ceres.")
     parser.add_argument("--tx", type=float, default=0.0, help="x translation value from Ceres.")
     parser.add_argument("--ty", type=float, default=0.0, help="y translation value from Ceres.")

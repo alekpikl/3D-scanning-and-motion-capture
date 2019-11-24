@@ -33,7 +33,7 @@ def main(args):
 
 if __name__ == "__main__":
     parser = argparse.ArgumentParser()
-    parser.add_argument("--data_path", type=str, default="data", help="Directory of the data files.")
+    parser.add_argument("--data_path", type=str, default="../../data", help="Directory of the data files.")
     parser.add_argument("--mu", type=float, default=0.0, help="The mu value from Ceres.")
     parser.add_argument("--sigma", type=float, default=1.0, help="The sigma value from Ceres.")
 
