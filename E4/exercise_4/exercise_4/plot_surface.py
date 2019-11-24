@@ -48,7 +48,7 @@ def main(args):
 
 if __name__ == "__main__":
     parser = argparse.ArgumentParser()
-    parser.add_argument("--data_path", type=str, default="../data", help="Directory of the data files.")
+    parser.add_argument("--data_path", type=str, default="../../data", help="Directory of the data files.")
     parser.add_argument("--a", type=float, default=1.0, help="The a value from Ceres.")
     parser.add_argument("--b", type=float, default=1.0, help="The b value from Ceres.")
     parser.add_argument("--c", type=float, default=1.0, help="The c value from Ceres.")
