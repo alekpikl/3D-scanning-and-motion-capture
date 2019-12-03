@@ -126,9 +126,9 @@ public:
 		p_t[0] = T(m_targetPoint[0]);
 		p_t[1] = T(m_targetPoint[1]);
 		p_t[2] = T(m_targetPoint[2]);
-		residuals[0] = (p_s[0] - p_t[0]) * T(m_weight);// * T(LAMBDA);
-		residuals[1] = (p_s[1] - p_t[1]) * T(m_weight);// * T(LAMBDA);
-		residuals[2] = (p_s[2] - p_t[2]) * T(m_weight);// * T(LAMBDA);
+		residuals[0] = (p_s[0] - p_t[0]) * T(m_weight) * T(LAMBDA);
+		residuals[1] = (p_s[1] - p_t[1]) * T(m_weight) * T(LAMBDA);
+		residuals[2] = (p_s[2] - p_t[2]) * T(m_weight) * T(LAMBDA);
 		
 		return true;
 	}
@@ -187,7 +187,7 @@ public:
 		n_t[1] = T(m_targetNormal[1]);
 		n_t[2] = T(m_targetNormal[2]);
 		
-		residuals[0] = n_t[0] * (p_s[0] - p_t[0]) + n_t[1] * (p_s[1] - p_t[1]) + n_t[2] * (p_s[2] - p_t[2]);
+		residuals[0] = T(LAMBDA) * (n_t[0] * (p_s[0] - p_t[0]) + n_t[1] * (p_s[1] - p_t[1]) + n_t[2] * (p_s[2] - p_t[2]));
 		return true;
 	}
 
@@ -203,7 +203,7 @@ protected:
 	const Vector3f m_targetNormal;
 	const float m_weight;
 	// TODO use LAMBDA somewhere ?
-
+	// Q: where to use lambda? What is this supposed to be? 
 	const float LAMBDA = 1.0f;
 };
 
@@ -375,7 +375,6 @@ private:
 				// TODO: Create a new point-to-point cost function and add it as constraint (i.e. residual block) 
 				// to the Ceres problem.
 
-				/* Q: Why the .getData() ??? */
 				problem.AddResidualBlock(
 					PointToPointConstraint::create(sourcePoint, targetPoint, 1.0),
 					nullptr, const_cast<double*>(poseIncrement.getData())
@@ -390,7 +389,6 @@ private:
 					// TODO: Create a new point-to-plane cost function and add it as constraint (i.e. residual block) 
 					// to the Ceres problem.
 
-					/* Q: Why the .getData() ??? */
 					problem.AddResidualBlock(
 						PointToPlaneConstraint::create(sourcePoint, targetPoint, targetNormal, 1.0),
 						nullptr, const_cast<double*>(poseIncrement.getData())
