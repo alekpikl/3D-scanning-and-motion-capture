@@ -12,8 +12,8 @@
 #define USE_POINT_TO_PLANE	1
 #define USE_LINEAR_ICP		0
 
-#define RUN_SHAPE_ICP		1
-#define RUN_SEQUENCE_ICP	0
+#define RUN_SHAPE_ICP		0
+#define RUN_SEQUENCE_ICP	1
 
 void debugCorrespondenceMatching() {
 	// Load the source and target mesh.
@@ -83,7 +83,8 @@ int alignBunnyWithICP() {
 	else {
 		optimizer = new CeresICPOptimizer();
 	}
-	
+	// NOTE: increasing Nb of iter helps getting better match (visually)
+	// Q: What do these 2 params do? Matching max distance / nr of iter ? What "should" they do? 
 	optimizer->setMatchingMaxDistance(0.0003f);
 	if (USE_POINT_TO_PLANE) {
 		optimizer->usePointToPlaneConstraints(true);

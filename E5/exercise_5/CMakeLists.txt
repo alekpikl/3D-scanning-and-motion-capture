@@ -1,9 +1,13 @@
 cmake_minimum_required(VERSION 3.6)
-
+set(CMAKE_C_COMPILER "/usr/local/opt/llvm/bin/clang")
+set(CMAKE_CXX_COMPILER "/usr/local/opt/llvm/bin/clang++")
 set(CMAKE_CONFIGURATION_TYPES Debug Release CACHE TYPE INTERNAL FORCE)
 
 project(exercise_05)
 
+include_directories("/usr/local/include" "/usr/local/opt/llvm/include")
+link_directories("/usr/local/lib" "/usr/local/opt/llvm/lib")
+SET(CMAKE_CXX_FLAGS  "-fopenmp")
 # Options
 set(LIBRARY_DIR ${CMAKE_CURRENT_SOURCE_DIR}/../../libs CACHE PATH "Path to lib folder")
 set(Eigen3_INCLUDE_DIR ${LIBRARY_DIR}/Eigen/ CACHE PATH "Path to Eigen source folder")
@@ -60,7 +64,7 @@ set(SOURCE_FILES
 link_directories(${FreeImage_LIBRARY_DIR})
 add_executable(exercise_05 main.cpp ${HEADER_FILES} ${SOURCE_FILES})
 target_link_libraries(exercise_05 ceres glog::glog freeimage)
-target_include_directories(exercise_05 PUBLIC ${Eigen3_INCLUDE_DIR} ${CMAKE_CURRENT_SOURCE_DIR}  ${Ceres_INCLUDE_DIR} ${glog_INCLUDE_DIR} ${FreeImage_INCLUDE_DIR} ${Flann_INCLUDE_DIR})
+target_include_directories(exercise_05 PUBLIC PUBLIC ${Eigen3_INCLUDE_DIR} ${CMAKE_CURRENT_SOURCE_DIR}  ${Ceres_INCLUDE_DIR} ${glog_INCLUDE_DIR} ${FreeImage_INCLUDE_DIR} ${Flann_INCLUDE_DIR})
 
 # # Visual Studio properties
 # set_property(DIRECTORY ${CMAKE_CURRENT_SOURCE_DIR} PROPERTY VS_STARTUP_PROJECT exercise_05)

@@ -467,61 +467,80 @@ private:
 
 	Matrix4f estimatePosePointToPlane(const std::vector<Vector3f>& sourcePoints, const std::vector<Vector3f>& targetPoints, const std::vector<Vector3f>& targetNormals) {
 		const unsigned nPoints = sourcePoints.size();
-
+		// Why are there fewer points every iteration? 	
 		// Build the system
 		MatrixXf A = MatrixXf::Zero(4 * nPoints, 6);
 		VectorXf b = VectorXf::Zero(4 * nPoints);
-
+		
+		/* TODO 
+			Q/NOTE: very unclear instructions! What are constraints here??? 
+			Answer: We use both, p2plane & p2point and exapand both into the matrix!
+		*/
 		for (unsigned i = 0; i < nPoints; i++) {
 			const auto& s = sourcePoints[i];
 			const auto& d = targetPoints[i];
 			const auto& n = targetNormals[i];
 
 			// TODO: Add the point-to-plane constraints to the system
-
-
-
-
-
-
+			A(4*i,0) = n(2)*s(1) - n(1)*s(2);
+			A(4*i,1) = n(0)*s(2) - n(2)*s(0);
+			A(4*i,2) = n(1)*s(0) - n(0)*s(1);
+			A(4*i,3) = n(0);
+			A(4*i,4) = n(1);
+			A(4*i,5) = n(2);	
+			b(4*i)	= n(0)*d(0) + n(1)*d(1) + n(2)*d(2) - n(0)*s(0) - n(1)*s(1) - n(2)*s(2);
 
 			// TODO: Add the point-to-point constraints to the system
+			A(4*i + 1,1) = s(2);
+			A(4*i + 1,2) = -s(1);
+			A(4*i + 1,3) = 1.0f;
+			b(4*i + 1)	 = d(0) - s(0);
 
+			A(4*i + 2,0) = -s(2);
+			A(4*i + 2,2) = s(0);
+			A(4*i + 2,4) = 1.0f;
+			b(4*i + 2)	 = d(1) - s(1);
 
-
-
-
+			A(4*i + 3,0) = s(1);
+			A(4*i + 3,1) = -s(0);
+			A(4*i + 3,5) = 1.0f;
+			b(4*i + 3)	 = d(2) - s(2);
 
 			// TODO: Optionally, apply a higher weight to point-to-plane correspondences
+			const float LAMBDA_plane = 1.0;
+			const float LAMBDA_point = 0.5;
+			A(4*i) *= LAMBDA_plane;
+			b(4*i) *= LAMBDA_plane;
 
-
-
+			A(4*i + 1) *= LAMBDA_point;
+			b(4*i + 1) *= LAMBDA_point;
+			A(4*i + 2) *= LAMBDA_point;
+			b(4*i + 2) *= LAMBDA_point;
+			A(4*i + 3) *= LAMBDA_point;
+			b(4*i + 3) *= LAMBDA_point;
 
 		}
-
-		// TODO: Solve the system
-		VectorXf x(6);
-
-
-
-
-
-
-
-
-		float alpha = x(0), beta = x(1), gamma = x(2);
-
-		// Build the pose matrix
-		Matrix3f rotation = AngleAxisf(alpha, Vector3f::UnitX()).toRotationMatrix() *
-			                AngleAxisf(beta, Vector3f::UnitY()).toRotationMatrix() *
-			                AngleAxisf(gamma, Vector3f::UnitZ()).toRotationMatrix();
-
-		Vector3f translation = x.tail(3);
-
-		// TODO: Build the pose matrix using the rotation and translation matrices
 		Matrix4f estimatedPose = Matrix4f::Identity();
-		
+		if (nPoints > 0) {
+			// TODO: Solve the system
+			VectorXf x(6);
+			// Eigen::JacobiSVD<MatrixXf> svd(A, ComputeThinU | ComputeThinV);
+			// x = svd.solve(b);
+			x = A.bdcSvd(ComputeThinU | ComputeThinV).solve(b);
 
+			float alpha = x(0), beta = x(1), gamma = x(2);
+
+			// Build the pose matrix
+			Matrix3f rotation = AngleAxisf(alpha, Vector3f::UnitX()).toRotationMatrix() *
+								AngleAxisf(beta, Vector3f::UnitY()).toRotationMatrix() *
+								AngleAxisf(gamma, Vector3f::UnitZ()).toRotationMatrix();
+
+			Vector3f translation = x.tail(3);
+			
+			// TODO: Build the pose matrix using the rotation and translation matrices
+			estimatedPose.block<3,3>(0,0) = rotation;
+			estimatedPose.block<3,1>(0,3) = translation;
+		}
 
 		return estimatedPose;
 	}
