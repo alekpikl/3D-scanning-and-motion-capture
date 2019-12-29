@@ -84,7 +84,7 @@ public:
 				// TODO: Compute the normals using central differences. 
 				// https://stackoverflow.com/questions/34644101/calculate-surface-normals-from-depth-image-using-neighboring-pixels-cross-produc
 				// nice explanation! (-dz/dx, -dz/dy, 1)
-				// normalsTmp[idx] = Vector3f(1, 1, 1); // Needs to be replaced.
+				// TODO have to take in consideration also the field of view!
 				normalsTmp[idx] = Vector3f(du, -dv, 1); // Needs to be replaced.
 				normalsTmp[idx].normalize();
 			}
